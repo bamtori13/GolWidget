@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">목표 달성 위젯</string>
+    <string name="widget_label">목표 달성 위젯</string>
+    <string name="widget_description">목표 달성률을 바 그래프로 표시</string>
+    <string name="no_items">없음</string>
+</resources>

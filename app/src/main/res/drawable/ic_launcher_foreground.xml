@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- 클립보드 본체 (safe zone: 18~90) -->
+    <path
+        android:fillColor="#1D4ED8"
+        android:pathData="M33,32 Q33,29 36,29 L72,29 Q75,29 75,32 L75,85 Q75,88 72,88 L36,88 Q33,88 33,85 Z" />
+
+    <!-- 클립 (상단 탭) -->
+    <path
+        android:fillColor="#93C5FD"
+        android:pathData="M44,22 Q44,20 46,20 L62,20 Q64,20 64,22 L64,30 L44,30 Z" />
+    <path
+        android:fillColor="#BFDBFE"
+        android:pathData="M50,16 Q54,14 58,16 Q60,20 58,22 L50,22 Q48,20 50,16 Z" />
+
+    <!-- 구분선 (클립 하단) -->
+    <path
+        android:fillColor="#3B82F6"
+        android:pathData="M33,29 L75,29 L75,33 L33,33 Z" />
+
+    <!-- 체크마크 1 (초록) -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#10B981"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M38,47 L42,52 L51,42" />
+    <!-- 항목 줄 1 -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#BFDBFE"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M55,46 L70,46" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#93C5FD"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M55,52 L65,52" />
+
+    <!-- 체크마크 2 (초록) -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#10B981"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M38,64 L42,69 L51,59" />
+    <!-- 항목 줄 2 -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#BFDBFE"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M55,63 L70,63" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#93C5FD"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M55,69 L62,69" />
+
+    <!-- 프로그레스 바 (하단) -->
+    <path
+        android:fillColor="#1E40AF"
+        android:pathData="M37,78 Q36,78 36,79 L36,82 Q36,83 37,83 L71,83 Q72,83 72,82 L72,79 Q72,78 71,78 Z" />
+    <path
+        android:fillColor="#60A5FA"
+        android:pathData="M37,78 L57,78 L57,83 L37,83 Q36,83 36,82 L36,79 Q36,78 37,78 Z" />
+
+</vector>
