@@ -4,6 +4,29 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
+    <!-- 공유 상태 배너 -->
+    <LinearLayout
+        android:id="@+id/banner_sync"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@color/primary"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/tv_sync_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="● 가족 공유 중"
+            android:textColor="@color/surface"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/tv_empty"
         android:layout_width="wrap_content"
@@ -22,8 +45,30 @@
         android:padding="16dp"
         android:clipToPadding="false" />
 
-    <!-- FAB -->
-    <TextView
+    <!-- 공유 버튼 (하단 좌측) -->
+    <FrameLayout
+        android:id="@+id/fab_share"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="20dp"
+        android:background="@drawable/goal_card_bg"
+        android:elevation="6dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="👨‍👩‍👧"
+            android:textSize="22sp" />
+
+    </FrameLayout>
+
+    <!-- 추가 버튼 (하단 우측) -->
+    <FrameLayout
         android:id="@+id/fab_add"
         android:layout_width="56dp"
         android:layout_height="56dp"
@@ -32,12 +77,18 @@
         android:layout_margin="20dp"
         android:background="@drawable/fab_background"
         android:elevation="6dp"
-        android:gravity="center"
-        android:text="+"
-        android:textColor="@color/surface"
-        android:textSize="28sp"
-        android:textStyle="bold"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="+"
+            android:textColor="@color/surface"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+    </FrameLayout>
 
 </RelativeLayout>

@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.ValueEventListener
 import kotlin.math.roundToInt
 import android.util.Log
 
@@ -20,33 +21,87 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var tvEmpty: TextView
-    private lateinit var fabAdd: View
+    private lateinit var fabAdd: FrameLayout
+    private lateinit var fabShare: FrameLayout
+    private lateinit var bannerSync: LinearLayout
+    private lateinit var tvSyncBanner: TextView
+
     private val goals = mutableListOf<Goal>()
+    private var syncListener: ValueEventListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         title = "목표 달성 관리"
-        Log.d("MainActivity :", "title")
 
         recyclerView = findViewById(R.id.rv_goals)
         tvEmpty = findViewById(R.id.tv_empty)
         fabAdd = findViewById(R.id.fab_add)
+        fabShare = findViewById(R.id.fab_share)
+        bannerSync = findViewById(R.id.banner_sync)
+        tvSyncBanner = findViewById(R.id.tv_sync_banner)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         Log.d("MainActivity :", "layout")
         recyclerView.adapter = GoalAdapter()
         Log.d("MainActivity :", "goaladapter")
         fabAdd.setOnClickListener { showCreateGoalDialog() }
-        Log.d("MainActivity :", "showDialog")
+        fabShare.setOnClickListener {
+            startActivity(Intent(this, ShareActivity::class.java))
+        }
+        bannerSync.setOnClickListener {
+            startActivity(Intent(this, ShareActivity::class.java))
+        }
     }
 
     override fun onResume() {
         super.onResume()
         refreshGoals()
+        updateSyncBanner()
+        startSyncIfNeeded()
     }
 
+    override fun onPause() {
+        super.onPause()
+        stopSync()
+    }
+
+    // ── Firebase 실시간 구독 시작 ────────────────────────────────────────
+    private fun startSyncIfNeeded() {
+        val code = SyncManager.getGroupCode(this) ?: return
+        if (!SyncManager.isSyncEnabled(this)) return
+
+        syncListener = SyncManager.listenGoals(code) { remoteGoals ->
+            // 원격 데이터로 로컬 갱신
+            runOnUiThread {
+                remoteGoals.forEach { GoalRepository.saveGoal(this, it) }
+                refreshGoals()
+                GoalWidgetProvider.updateAllWidgets(this)
+            }
+        }
+    }
+
+    private fun stopSync() {
+        val code = SyncManager.getGroupCode(this)
+        val listener = syncListener
+        if (code != null && listener != null) {
+            SyncManager.removeListener(code, listener)
+        }
+        syncListener = null
+    }
+
+    private fun updateSyncBanner() {
+        if (SyncManager.isSyncEnabled(this)) {
+            val code = SyncManager.getGroupCode(this) ?: ""
+            tvSyncBanner.text = "● 가족 공유 중  (코드: $code)"
+            bannerSync.visibility = View.VISIBLE
+        } else {
+            bannerSync.visibility = View.GONE
+        }
+    }
+
+    // ── 목표 목록 갱신 ──────────────────────────────────────────────────
     private fun refreshGoals() {
         goals.clear()
         goals.addAll(GoalRepository.loadGoals(this))
@@ -55,6 +110,24 @@ class MainActivity : AppCompatActivity() {
         recyclerView.visibility = if (goals.isEmpty()) View.GONE else View.VISIBLE
     }
 
+    // ── 목표 저장 (로컬 + Firebase 동시) ────────────────────────────────
+    private fun saveGoalSynced(goal: Goal) {
+        GoalRepository.saveGoal(this, goal)
+        val code = SyncManager.getGroupCode(this)
+        if (code != null && SyncManager.isSyncEnabled(this)) {
+            SyncManager.pushGoal(code, goal)
+        }
+    }
+
+    private fun deleteGoalSynced(goalId: String) {
+        GoalRepository.deleteGoal(this, goalId)
+        val code = SyncManager.getGroupCode(this)
+        if (code != null && SyncManager.isSyncEnabled(this)) {
+            SyncManager.deleteGoalRemote(code, goalId)
+        }
+    }
+
+    // ── 목표 생성/편집 다이얼로그 ────────────────────────────────────────
     private fun showCreateGoalDialog(existing: Goal? = null) {
         val view = layoutInflater.inflate(R.layout.dialog_create_goal, null)
         val tvDlgTitle = view.findViewById<TextView>(R.id.tv_dialog_goal_title)
@@ -118,11 +191,12 @@ class MainActivity : AppCompatActivity() {
                     target = target,
                     directCurrent = current
                 )
-                GoalRepository.saveGoal(this, goal)
+                saveGoalSynced(goal)
+                dialog.dismiss()
+                refreshGoals()
+                GoalWidgetProvider.updateAllWidgets(this)
             }
-            dialog.dismiss()
-            refreshGoals()
-            GoalWidgetProvider.updateAllWidgets(this)
+
         }
         dialog.show()
     }
@@ -185,7 +259,7 @@ class MainActivity : AppCompatActivity() {
                             1 -> AlertDialog.Builder(this@MainActivity)
                                 .setMessage("'${goal.name}' 목표를 삭제하시겠습니까?")
                                 .setPositiveButton("삭제") { _, _ ->
-                                    GoalRepository.deleteGoal(this@MainActivity, goal.id)
+                                    deleteGoalSynced(goal.id)
                                     refreshGoals()
                                     GoalWidgetProvider.updateAllWidgets(this@MainActivity)
                                 }

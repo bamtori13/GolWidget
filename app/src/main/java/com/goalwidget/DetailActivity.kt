@@ -65,6 +65,16 @@ class DetailActivity : AppCompatActivity() {
         refreshUI()
     }
 
+    // 저장 시 Firebase도 동시에 업데이트
+    private fun saveGoalSynced() {
+        GoalRepository.saveGoal(this, goal)
+        val code = SyncManager.getGroupCode(this)
+        if (code != null && SyncManager.isSyncEnabled(this)) {
+            SyncManager.pushGoal(code, goal)
+        }
+        GoalWidgetProvider.updateAllWidgets(this)
+    }
+
     private fun refreshUI() {
         title = goal.name
         tvTitle.text = goal.name
@@ -168,7 +178,7 @@ class DetailActivity : AppCompatActivity() {
                     .setMessage("'${item.name}' 항목을 삭제할까요?")
                     .setPositiveButton("삭제") { _, _ ->
                         goal.items.removeAt(holder.adapterPosition)
-                        GoalRepository.saveGoal(this@DetailActivity, goal)
+                        saveGoalSynced()
                         refreshUI()
                     }
                     .setNegativeButton("취소", null).show()
