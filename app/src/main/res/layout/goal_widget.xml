@@ -27,6 +27,25 @@
             android:textSize="13sp"
             android:textStyle="bold" />
 
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_widget"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/widget_progress_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="7dp">
+
         <TextView
             android:id="@+id/tv_widget_value"
             android:layout_width="wrap_content"
@@ -39,6 +58,12 @@
             android:ellipsize="end"
             android:maxLines="1" />
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            />
+
         <TextView
             android:id="@+id/tv_widget_rate"
             android:layout_width="wrap_content"
@@ -49,17 +74,6 @@
             android:textStyle="bold"
             android:minWidth="38dp"
             android:gravity="end" />
-
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progress_widget"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:indeterminate="false"
-        android:max="100"
-        android:progress="0"
-        android:progressDrawable="@drawable/widget_progress_bar" />
 
 </LinearLayout>
