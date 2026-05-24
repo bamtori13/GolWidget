@@ -23,6 +23,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Goal"
+			android:minWidth="0dp"
             android:textColor="#F1F5F9"
             android:textSize="13sp"
             android:textStyle="bold" />

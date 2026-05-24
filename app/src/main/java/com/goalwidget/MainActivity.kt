@@ -150,7 +150,6 @@ class MainActivity : AppCompatActivity() {
                 if (existing.directCurrent > 0)
                     etCurrent.setText(GoalWidgetProvider.formatNum(existing.directCurrent))
             } else {
-                // 세부 항목 있으면 합산값 표시(편집 불가 안내)
                 etTarget.setText(GoalWidgetProvider.formatNum(existing.target))
                 etTarget.hint = "세부 항목 합계로 자동 계산됨"
                 etCurrent.setText(GoalWidgetProvider.formatNum(existing.totalCurrent))
@@ -168,36 +167,42 @@ class MainActivity : AppCompatActivity() {
             val name = etName.text.toString().trim()
             if (name.isEmpty()) { etName.error = "목표 이름을 입력하세요"; return@setOnClickListener }
 
-            val targetStr = etTarget.text.toString().trim().replace(",", "")
-            val target = targetStr.toDoubleOrNull()
-            if (target == null || target <= 0) {
-                etTarget.error = "0보다 큰 목표값을 입력하세요"
-                return@setOnClickListener
-            }
-            val current = etCurrent.text.toString().trim().replace(",", "").toDoubleOrNull() ?: 0.0
+            val hasItems = existing?.items?.isNotEmpty() == true
 
-            if (existing != null) {
-                existing.name = name
-                existing.unit = etUnit.text.toString().trim()
-                existing.target = target
-                if (existing.items.isEmpty()) {
-                    existing.directCurrent = current
+            val target: Double
+//            if (hasItems) {
+//                target = existing!!.target  // 항목 합산값 유지
+//            } else {
+                val parsed = etTarget.text.toString().toDoubleOrNull()
+                if (parsed == null || parsed <= 0) {
+                    etTarget.error = "0보다 큰 목표값을 입력하세요"
+                    return@setOnClickListener
                 }
-                GoalRepository.saveGoal(this, existing)
+                target = parsed
+            //}
+            val current = if (hasItems) existing!!.totalCurrent
+                          else etCurrent.text.toString().toDoubleOrNull() ?: 0.0
+
+            val goal = if (existing != null) {
+                existing.apply {
+                    this.name = name
+                    this.unit = etUnit.text.toString().trim()
+                    this.target = target
+                }
             } else {
-                val goal = Goal(
+                Goal(
                     name = name,
                     unit = etUnit.text.toString().trim(),
                     target = target,
                     directCurrent = current
                 )
+            }
                 saveGoalSynced(goal)
                 dialog.dismiss()
                 refreshGoals()
                 GoalWidgetProvider.updateAllWidgets(this)
             }
 
-        }
         dialog.show()
     }
 
