@@ -20,6 +20,7 @@ class DetailActivity : AppCompatActivity() {
 
     private var goalId: String = ""
     private lateinit var goal: Goal
+    private var goalLoaded = false   // ← 최초 1회만 DB 로드 플래그
 
     private lateinit var tvTitle: TextView
     private lateinit var tvRate: TextView
@@ -55,13 +56,14 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadGoal()
-    }
-
-    private fun loadGoal() {
+        if (!goalLoaded) {
+            // 최초 진입 시만 DB에서 로드
         val loaded = GoalRepository.getGoal(this, goalId)
         if (loaded == null) { finish(); return }
         goal = loaded
+            goalLoaded = true
+        }
+        // 이후 resume(다이얼로그 닫힘 등)은 메모리의 goal 객체 그대로 유지
         refreshUI()
     }
 
@@ -130,19 +132,30 @@ class DetailActivity : AppCompatActivity() {
         btnSave.setOnClickListener {
             val name = etName.text.toString().trim()
             if (name.isEmpty()) { etName.error = "항목명을 입력하세요"; return@setOnClickListener }
-            val value = etValue.text.toString().replace(",", "").toDoubleOrNull() ?: 0.0
+
+            val value  = etValue.text.toString().toDoubleOrNull() ?: 0.0
 
             if (existing != null) {
-                existing.name = name; existing.currentValue = value
+                // 기존 항목 수정: goal.items 내 객체를 직접 수정
+                val idx = goal.items.indexOfFirst { it.id == existing.id }
+                if (idx >= 0) {
+                    goal.items[idx] = goal.items[idx].copy(
+                        name = name,
+                        currentValue = value,
+                    )
+                }
             } else {
+                // 신규 항목 추가
                 goal.items.add(GoalItem(name = name, currentValue = value))
             }
-            GoalRepository.saveGoal(this, goal)
-            dialog.dismiss()
-            refreshUI()
+
+            saveGoalSynced()   // ① 먼저 저장
+            dialog.dismiss()   // ② 그 다음 닫기 (onResume 유발하지 않음 - dialog dismiss는 resume 안 함)
+            refreshUI()        // ③ UI 갱신
         }
         dialog.show()
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) { finish(); return true }
