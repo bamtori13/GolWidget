@@ -33,16 +33,18 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="등록된 목표가 없습니다.\n아래 + 버튼으로 목표를 추가하세요."
+        android:text="@string/no_goals"
         android:textColor="@color/text_secondary"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_goals"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/banner_sync"
         android:padding="16dp"
+        android:paddingBottom="80dp"
         android:clipToPadding="false" />
 
     <!-- 공유 버튼 (하단 좌측) -->

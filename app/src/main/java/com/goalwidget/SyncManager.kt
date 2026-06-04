@@ -1,6 +1,7 @@
 package com.goalwidget
 
 import android.content.Context
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -8,7 +9,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import android.util.Log
 
 /**
  * Firebase Realtime Database 동기화 매니저
@@ -19,9 +19,9 @@ import android.util.Log
  *     createdAt: Long
  *     memberCount: Int
  *   goals/{goalId}/
- *     id, name, unit, directCurrent
+ *     id, name, unit, directTarget, directCurrent
  *     items/{itemId}/
- *       id, name, currentValue
+ *       id, name, currentValue, targetValue
  *
  * /users/{uid}/groupCode: String   ← 내가 속한 그룹 코드
  */
@@ -136,7 +136,6 @@ object SyncManager {
 
         ensureSignedIn({ uid ->
             Log.d("SyncManager", "로그인 성공 - uid=$uid")
-            Log.d("SyncManager", "Firebase DB 조회 시작: groups/$normalizedCode/meta")
 
             val ref = db.child("groups").child(normalizedCode).child("meta")
             Log.d("SyncManager", "DB 조회 시작: ${ref} (URL: ${db.toString()})")
@@ -202,7 +201,7 @@ object SyncManager {
             "id" to goal.id,
             "name" to goal.name,
             "unit" to goal.unit,
-            "target" to goal.target,
+            "directTarget" to goal.directTarget,
             "directCurrent" to goal.directCurrent
         )
         val ref = db.child("groups").child(code).child("goals").child(goal.id)
@@ -217,7 +216,8 @@ object SyncManager {
                 itemsRef.child(item.id).setValue(mapOf(
                     "id" to item.id,
                     "name" to item.name,
-                    "currentValue" to item.currentValue
+                    "currentValue" to item.currentValue,
+                    "targetValue" to item.targetValue
                 ))
             }
         }
@@ -262,7 +262,7 @@ object SyncManager {
             val id = snap.child("id").getValue(String::class.java) ?: return null
             val name = snap.child("name").getValue(String::class.java) ?: ""
             val unit = snap.child("unit").getValue(String::class.java) ?: ""
-            val target = snap.child("target").getValue(Double::class.java) ?: 0.0
+            val directTarget = snap.child("directTarget").getValue(Double::class.java) ?: 0.0
             val directCurrent = snap.child("directCurrent").getValue(Double::class.java) ?: 0.0
 
             val items = mutableListOf<GoalItem>()
@@ -270,11 +270,12 @@ object SyncManager {
                 val itemId = itemSnap.child("id").getValue(String::class.java) ?: continue
                 val itemName = itemSnap.child("name").getValue(String::class.java) ?: ""
                 val cur = itemSnap.child("currentValue").getValue(Double::class.java) ?: 0.0
-                items.add(GoalItem(id = itemId, name = itemName, currentValue = cur))
+                val tgt = itemSnap.child("targetValue").getValue(Double::class.java) ?: 0.0
+                items.add(GoalItem(id = itemId, name = itemName, currentValue = cur, targetValue = tgt))
             }
 
             Goal(id = id, name = name, unit = unit,
-                target = target, directCurrent = directCurrent,
+                directTarget = directTarget, directCurrent = directCurrent,
                 items = items)
         } catch (e: Exception) { null }
     }

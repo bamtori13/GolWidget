@@ -28,6 +28,19 @@
                 android:textStyle="bold"
                 android:textColor="@color/surface" />
 
+            <!-- 위젯 투명도 조절 버튼 -->
+            <TextView
+                android:id="@+id/btn_widget_opacity"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:gravity="center"
+                android:text="🔆"
+                android:textSize="18sp"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+
             <TextView
                 android:id="@+id/tv_detail_rate"
                 android:layout_width="wrap_content"

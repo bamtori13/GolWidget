@@ -21,7 +21,6 @@
             </intent-filter>
         </activity>
 
-        <!-- WidgetConfigActivity: configure 속성과 반드시 일치해야 함 -->
         <activity
             android:name=".WidgetConfigActivity"
             android:exported="true"

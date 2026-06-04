@@ -1,14 +1,13 @@
 {
   "project_info": {
-    "project_number": "819342785406",
-    "project_id": "goalwidget",
-    "storage_bucket": "goalwidget.firebasestorage.app",
-    "firebase_url": "https://goalwidget-default-rtdb.asia-southeast1.firebasedatabase.app"
+    "project_number": "YOUR_PROJECT_NUMBER",
+    "project_id": "YOUR_PROJECT_ID",
+    "storage_bucket": "YOUR_PROJECT_ID.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:819342785406:android:8d975aab4a0c899fe4512f",
+        "mobilesdk_app_id": "1:YOUR_PROJECT_NUMBER:android:XXXXXXXXXXXX",
         "android_client_info": {
           "package_name": "com.goalwidget"
         }
@@ -16,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCO6fKcdnaLQKEuVysCY4comI5bRGVw4Ls"
+          "current_key": "YOUR_API_KEY"
         }
       ],
       "services": {
