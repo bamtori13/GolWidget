@@ -100,7 +100,7 @@ class DetailActivity : AppCompatActivity() {
 
         // 세부 항목이 없으면 직접 달성값 편집 안내
         tvEmpty.text = if (goal.target > 0 && !showItems)
-            "달성: ${GoalWidgetProvider.formatNum(goal.directCurrent)} / 목표: ${GoalWidgetProvider.formatNum(goal.target)}${if (goal.unit.isNotEmpty()) " ${goal.unit}" else ""}\n\n세부 항목을 추가하거나\n아래 버튼으로 달성값을 직접 입력하세요."
+            "달성: ${NumberFormat.getInstance().format(goal.totalCurrent)} / 목표: ${NumberFormat.getInstance().format(goal.target)}${if (goal.unit.isNotEmpty()) " ${goal.unit}" else ""}\n\n세부 항목을 추가하거나\n아래 버튼으로 달성값을 직접 입력하세요."
         else
             "세부 항목이 없습니다.\n+ 버튼으로 항목을 추가하세요."
 
@@ -170,8 +170,8 @@ class DetailActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: VH, position: Int) {
             val item = goal.items[position]
             holder.tvName.text = item.name
-            val unit = if (goal.unit.isNotEmpty()) " ${goal.unit}" else ""
-            holder.tvValues.text = "${NumberFormat.getInstance().format(item.currentValue)}/$unit "
+            val unit = if (goal.unit.isNotEmpty()) " / ${goal.unit}" else ""
+            holder.tvValues.text = "${NumberFormat.getInstance().format(item.currentValue)}$unit "
 
             holder.btnEdit.setOnClickListener { showItemDialog(item) }
             holder.btnDelete.setOnClickListener {

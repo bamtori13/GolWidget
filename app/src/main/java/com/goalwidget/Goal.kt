@@ -18,15 +18,14 @@ data class Goal(
     var unit: String = "",
     // 직접 입력한 총 목표값 (세부 항목이 없을 때 사용)
     var target: Double = 0.0,
-    // 직접 입력한 현재 달성값 (세부 항목이 없을 때 사용)
-    var directCurrent: Double = 0.0,
-    var items: MutableList<GoalItem> = mutableListOf(),
-    // 목표 색상 (ARGB int, 기본값 0 = 미설정 → 기본 파란색 사용)
-    var colorHex: String = ""
+     // 목표 색상 (ARGB int, 기본값 0 = 미설정 → 기본 파란색 사용)
+    var colorHex: String = "",
+    var items: MutableList<GoalItem> = mutableListOf()
+   
 ) {
-    // 세부 항목이 있으면 항목 합산, 없으면 directTarget/directCurrent 사용
+    // 세부 항목이 있으면 항목 합산
     val totalCurrent: Double
-        get() = if (items.isNotEmpty()) items.sumOf { it.currentValue } else directCurrent
+        get() = if (items.isNotEmpty()) items.sumOf { it.currentValue } else 0.0
 
     val achievementRate: Double
         get() = if (target > 0) (totalCurrent / target * 100).coerceAtMost(100.0) else 0.0

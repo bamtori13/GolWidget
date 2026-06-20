@@ -88,9 +88,11 @@ class WidgetConfigActivity : AppCompatActivity() {
         val etName = view.findViewById<EditText>(R.id.et_goal_name)
         val etUnit = view.findViewById<EditText>(R.id.et_goal_unit)
         val etTarget = view.findViewById<EditText>(R.id.et_goal_target)
-        val etCurrent = view.findViewById<EditText>(R.id.et_goal_current)
         val btnCancel = view.findViewById<TextView>(R.id.btn_goal_cancel)
         val btnSave = view.findViewById<TextView>(R.id.btn_goal_save)
+        val palette    = view.findViewById<LinearLayout>(R.id.color_palette)
+        
+        var selectedColor = ColorPalette.COLORS[0]
 
         val dialog = AlertDialog.Builder(this)
             .setView(view)
@@ -104,13 +106,12 @@ class WidgetConfigActivity : AppCompatActivity() {
             if (name.isEmpty()) { etName.error = "목표 이름을 입력하세요"; return@setOnClickListener }
             val target = etTarget.text.toString().toDoubleOrNull()
             if (target == null || target <= 0) { etTarget.error = "0보다 큰 목표값을 입력하세요"; return@setOnClickListener }
-            val current = etCurrent.text.toString().toDoubleOrNull() ?: 0.0
 
             val goal = Goal(
                 name = name,
                 unit = etUnit.text.toString().trim(),
                 target = target,
-                directCurrent = current
+                colorHex = selectedColor
             )
             GoalRepository.saveGoal(this, goal)
             dialog.dismiss()

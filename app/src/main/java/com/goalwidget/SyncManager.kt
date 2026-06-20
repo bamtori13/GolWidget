@@ -19,7 +19,7 @@ import android.util.Log
  *     createdAt: Long
  *     memberCount: Int
  *   goals/{goalId}/
- *     id, name, unit, directCurrent
+ *     id, name, unit, totalCurrent
  *     items/{itemId}/
  *       id, name, currentValue
  *
@@ -203,7 +203,7 @@ object SyncManager {
             "name" to goal.name,
             "unit" to goal.unit,
             "target" to goal.target,
-            "directCurrent" to goal.directCurrent
+            "colorHex" to goal.colorHex
         )
         val ref = db.child("groups").child(code).child("goals").child(goal.id)
         ref.setValue(goalMap)
@@ -263,7 +263,7 @@ object SyncManager {
             val name = snap.child("name").getValue(String::class.java) ?: ""
             val unit = snap.child("unit").getValue(String::class.java) ?: ""
             val target = snap.child("target").getValue(Double::class.java) ?: 0.0
-            val directCurrent = snap.child("directCurrent").getValue(Double::class.java) ?: 0.0
+            val colorHex = snap.child("colorHex").getValue(String::class.java) ?: ""
 
             val items = mutableListOf<GoalItem>()
             for (itemSnap in snap.child("items").children) {
@@ -274,7 +274,7 @@ object SyncManager {
             }
 
             Goal(id = id, name = name, unit = unit,
-                target = target, directCurrent = directCurrent,
+                target = target, colorHex = colorHex,
                 items = items)
         } catch (e: Exception) { null }
     }

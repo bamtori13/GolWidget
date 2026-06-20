@@ -135,7 +135,6 @@ class MainActivity : AppCompatActivity() {
         val etName = view.findViewById<EditText>(R.id.et_goal_name)
         val etUnit = view.findViewById<EditText>(R.id.et_goal_unit)
         val etTarget = view.findViewById<EditText>(R.id.et_goal_target)
-        val etCurrent = view.findViewById<EditText>(R.id.et_goal_current)
         val palette    = view.findViewById<LinearLayout>(R.id.color_palette)
         val btnCancel = view.findViewById<TextView>(R.id.btn_goal_cancel)
         val btnSave = view.findViewById<TextView>(R.id.btn_goal_save)
@@ -149,18 +148,7 @@ class MainActivity : AppCompatActivity() {
             btnSave.text = "저장"
             etName.setText(existing.name)
             etUnit.setText(existing.unit)
-            // 세부 항목이 없을 때만 직접값 표시
-            if (existing.items.isEmpty()) {
-                if (existing.target > 0)
-                    etTarget.setText(GoalWidgetProvider.formatNum(existing.target))
-                if (existing.directCurrent > 0)
-                    etCurrent.setText(GoalWidgetProvider.formatNum(existing.directCurrent))
-            } else {
-            
-                etTarget.setText(GoalWidgetProvider.formatNum(existing.target))
-                etTarget.hint = "세부 항목 합계로 자동 계산됨"
-                etCurrent.setText(GoalWidgetProvider.formatNum(existing.totalCurrent))
-            }
+            etTarget.setText(GoalWidgetProvider.formatNum(existing.target))
         }
 
         val dialog = AlertDialog.Builder(this)
@@ -180,24 +168,18 @@ class MainActivity : AppCompatActivity() {
                 etTarget.error = "0보다 큰 목표값을 입력하세요"
                 return@setOnClickListener
             }
-            val current = etCurrent.text.toString().trim().replace(",", "").toDoubleOrNull() ?: 0.0
-
             if (existing != null) {
                 existing.name = name
                 existing.unit = etUnit.text.toString().trim()
                 existing.target = target
-		existing.colorHex = selectedColor
-                if (existing.items.isEmpty()) {
-                    existing.directCurrent = current
-                }
+		        existing.colorHex = selectedColor
                 GoalRepository.saveGoal(this, existing)
             } else {
                 val goal = Goal(
                     name = name,
                     unit = etUnit.text.toString().trim(),
                     target = target,
-                    directCurrent = current,
-		    colorHex = selectedColor
+		            colorHex = selectedColor
                 )
                 saveGoalSynced(goal)
                 dialog.dismiss()

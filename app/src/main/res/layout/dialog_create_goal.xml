@@ -130,28 +130,6 @@
             android:inputType="numberDecimal"
             android:layout_marginBottom="14dp" />
 
-        <!-- 현재 달성값 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="현재 달성값 (선택, 기본 0)"
-            android:textSize="13sp"
-            android:textColor="@color/text_secondary"
-            android:layout_marginBottom="6dp" />
-
-        <EditText
-            android:id="@+id/et_goal_current"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/input_background"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:hint="0"
-            android:textSize="15sp"
-            android:textColor="@color/text_primary"
-            android:inputType="numberDecimal"
-            android:layout_marginBottom="24dp" />
-
         <!-- 버튼 -->
         <LinearLayout
             android:layout_width="match_parent"
