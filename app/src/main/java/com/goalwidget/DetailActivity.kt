@@ -153,7 +153,7 @@ class DetailActivity : AppCompatActivity() {
             } else {
                 goal.items.add(GoalItem(name = name, currentValue = value))
             }
-            GoalRepository.saveGoal(this, goal)
+            saveGoalSynced()
             dialog.dismiss()
             refreshUI()
         }

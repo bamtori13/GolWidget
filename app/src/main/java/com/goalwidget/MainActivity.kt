@@ -174,7 +174,7 @@ class MainActivity : AppCompatActivity() {
                 existing.unit = etUnit.text.toString().trim()
                 existing.target = target
 		        existing.colorHex = selectedColor
-                GoalRepository.saveGoal(this, existing)
+                saveGoalSynced(existing)
             } else {
                 val goal = Goal(
                     name = name,
@@ -190,6 +190,16 @@ class MainActivity : AppCompatActivity() {
             GoalWidgetProvider.updateAllWidgets(this)
         }
         dialog.show()
+    }
+
+
+    
+    // ── 목표 복제 ────────────────────────────────────────
+    private fun copyGoal(goal: Goal) {
+        
+        val newGoal = goal.copy(id = java.util.UUID.randomUUID().toString())
+        newGoal.items = mutableListOf()
+        showCreateGoalDialog(newGoal)
     }
 
     inner class GoalAdapter : RecyclerView.Adapter<GoalAdapter.VH>() {
@@ -242,7 +252,7 @@ class MainActivity : AppCompatActivity() {
             holder.itemView.setOnLongClickListener {
                 AlertDialog.Builder(this@MainActivity)
                     .setTitle(goal.name)
-                    .setItems(arrayOf("편집", "삭제")) { _, which ->
+                    .setItems(arrayOf("편집", "삭제", "복제")) { _, which ->
                         when (which) {
                             0 -> showCreateGoalDialog(goal)
                             1 -> AlertDialog.Builder(this@MainActivity)
@@ -253,6 +263,7 @@ class MainActivity : AppCompatActivity() {
                                     GoalWidgetProvider.updateAllWidgets(this@MainActivity)
                                 }
                                 .setNegativeButton("취소", null).show()
+                            2 -> copyGoal(goal)
                         }
                     }.show()
                 true
