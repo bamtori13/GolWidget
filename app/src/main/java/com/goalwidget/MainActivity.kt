@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.ValueEventListener
 import kotlin.math.roundToInt
 import android.util.Log
+import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
 
@@ -135,9 +136,14 @@ class MainActivity : AppCompatActivity() {
         val etUnit = view.findViewById<EditText>(R.id.et_goal_unit)
         val etTarget = view.findViewById<EditText>(R.id.et_goal_target)
         val etCurrent = view.findViewById<EditText>(R.id.et_goal_current)
+        val palette    = view.findViewById<LinearLayout>(R.id.color_palette)
         val btnCancel = view.findViewById<TextView>(R.id.btn_goal_cancel)
         val btnSave = view.findViewById<TextView>(R.id.btn_goal_save)
 
+        var selectedColor = existing?.colorHex ?: ColorPalette.COLORS[0]
+
+        // 색상 팔레트 설정
+        ColorPalette.setup(this, palette, selectedColor) { hex -> selectedColor = hex }
         if (existing != null) {
             tvDlgTitle.text = "목표 편집"
             btnSave.text = "저장"
@@ -150,7 +156,7 @@ class MainActivity : AppCompatActivity() {
                 if (existing.directCurrent > 0)
                     etCurrent.setText(GoalWidgetProvider.formatNum(existing.directCurrent))
             } else {
-                // 세부 항목 있으면 합산값 표시(편집 불가 안내)
+            
                 etTarget.setText(GoalWidgetProvider.formatNum(existing.target))
                 etTarget.hint = "세부 항목 합계로 자동 계산됨"
                 etCurrent.setText(GoalWidgetProvider.formatNum(existing.totalCurrent))
@@ -180,6 +186,7 @@ class MainActivity : AppCompatActivity() {
                 existing.name = name
                 existing.unit = etUnit.text.toString().trim()
                 existing.target = target
+		existing.colorHex = selectedColor
                 if (existing.items.isEmpty()) {
                     existing.directCurrent = current
                 }
@@ -189,7 +196,8 @@ class MainActivity : AppCompatActivity() {
                     name = name,
                     unit = etUnit.text.toString().trim(),
                     target = target,
-                    directCurrent = current
+                    directCurrent = current,
+		    colorHex = selectedColor
                 )
                 saveGoalSynced(goal)
                 dialog.dismiss()
@@ -223,17 +231,14 @@ class MainActivity : AppCompatActivity() {
             val goal = goals[position]
             holder.tvName.text = goal.name
             val rate = goal.achievementRate
+	    val color = goal.resolveColor()
             holder.tvRate.text = "${rate.roundToInt()}%"
 
-            val color = when {
-                rate >= 80 -> getColor(R.color.accent)
-                rate >= 50 -> getColor(R.color.progress_medium)
-                else -> getColor(R.color.progress_low)
-            }
+          
             holder.tvRate.setTextColor(color)
 
             val unit = if (goal.unit.isNotEmpty()) " ${goal.unit}" else ""
-            holder.tvValues.text = "달성 ${GoalWidgetProvider.formatNum(goal.totalCurrent)}$unit  /  목표 ${GoalWidgetProvider.formatNum(goal.target)}$unit"
+            holder.tvValues.text = "달성 ${NumberFormat.getInstance().format(goal.totalCurrent)}$unit  /  목표 ${NumberFormat.getInstance().format(goal.target)}$unit"
             holder.tvUnit.text = ""
 
             // 프로그레스 바 (LinearLayout weight 방식)
@@ -241,6 +246,7 @@ class MainActivity : AppCompatActivity() {
             container.post {
                 val w = (container.width * rate / 100.0).toInt()
                 holder.vFill.layoutParams = holder.vFill.layoutParams.also { it.width = w }
+		holder.vFill.setBackgroundColor(color)
             }
 
             // 탭 → 세부 화면

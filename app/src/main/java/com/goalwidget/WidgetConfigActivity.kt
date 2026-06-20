@@ -2,6 +2,8 @@ package com.goalwidget
 
 import android.appwidget.AppWidgetManager
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +23,10 @@ class WidgetConfigActivity : AppCompatActivity() {
 
     private var widgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private val goals = mutableListOf<Goal>()
+    private var selectedGoal: Goal? = null
+    private var isReconfigure = false  // 길게 눌러 재설정 시 true → 목표 선택만 하고 바로 적용
+
+    // Step 1 views
     private lateinit var rvGoals: RecyclerView
     private lateinit var tvEmpty: TextView
     private lateinit var btnCreateNew: LinearLayout
@@ -40,10 +47,13 @@ class WidgetConfigActivity : AppCompatActivity() {
             finish()
             return
         }
+        isReconfigure = intent.getBooleanExtra("reconfigure", false)
+        if (isReconfigure) title = "표시할 목표 변경"
 
         setContentView(R.layout.activity_widget_config)
         title = "위젯 목표 선택"
 
+        // Step 1
         rvGoals = findViewById(R.id.rv_config_goals)
         tvEmpty = findViewById(R.id.tv_config_empty)
         btnCreateNew = findViewById(R.id.btn_create_new)

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.text.NumberFormat
 import kotlin.math.roundToInt
 
 class DetailActivity : AppCompatActivity() {
@@ -81,8 +82,8 @@ class DetailActivity : AppCompatActivity() {
         val rate = goal.achievementRate
         tvRate.text = "${rate.roundToInt()}%"
         val unit = if (goal.unit.isNotEmpty()) " ${goal.unit}" else ""
-        tvCurrent.text = "달성: ${GoalWidgetProvider.formatNum(goal.totalCurrent)}$unit"
-        tvTarget.text = "목표: ${GoalWidgetProvider.formatNum(goal.target)}$unit"
+        tvCurrent.text = "달성: ${NumberFormat.getInstance().format(goal.totalCurrent)}$unit"
+        tvTarget.text = "목표: ${NumberFormat.getInstance().format(goal.target)}$unit"
 
         val progressParent = vProgress.parent as FrameLayout
         progressParent.post {
@@ -110,7 +111,7 @@ class DetailActivity : AppCompatActivity() {
         val view = layoutInflater.inflate(R.layout.dialog_item_edit, null)
         val tvDlgTitle = view.findViewById<TextView>(R.id.tv_dialog_title)
         val etName = view.findViewById<EditText>(R.id.et_item_name)
-        val etValue = view.findViewById<EditText>(R.id.et_item_value)
+        val etValue = view.findViewById<EditText>(R.id.et_item_value)   //달성 수치 편집 edittext
         val btnCancel = view.findViewById<TextView>(R.id.btn_dialog_cancel)
         val btnSave = view.findViewById<TextView>(R.id.btn_dialog_save)
 
@@ -170,7 +171,7 @@ class DetailActivity : AppCompatActivity() {
             val item = goal.items[position]
             holder.tvName.text = item.name
             val unit = if (goal.unit.isNotEmpty()) " ${goal.unit}" else ""
-            holder.tvValues.text = "${GoalWidgetProvider.formatNum(item.currentValue)}/$unit "
+            holder.tvValues.text = "${NumberFormat.getInstance().format(item.currentValue)}/$unit "
 
             holder.btnEdit.setOnClickListener { showItemDialog(item) }
             holder.btnDelete.setOnClickListener {

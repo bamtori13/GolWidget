@@ -29,15 +29,12 @@
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progress_widget"
-        style="?android:attr/progressBarStyleHorizontal"
+    <!-- Bitmap으로 그린 컬러 프로그레스 바 -->
+    <ImageView
+        android:id="@+id/iv_progress_bar"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:indeterminate="false"
-        android:max="100"
-        android:progress="0"
-        android:progressDrawable="@drawable/widget_progress_bar" />
+        android:layout_height="8dp"
+        android:scaleType="fitXY" />
 
     <RelativeLayout
         android:layout_width="match_parent"

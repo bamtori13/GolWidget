@@ -20,7 +20,9 @@ data class Goal(
     var target: Double = 0.0,
     // 직접 입력한 현재 달성값 (세부 항목이 없을 때 사용)
     var directCurrent: Double = 0.0,
-    var items: MutableList<GoalItem> = mutableListOf()
+    var items: MutableList<GoalItem> = mutableListOf(),
+    // 목표 색상 (ARGB int, 기본값 0 = 미설정 → 기본 파란색 사용)
+    var colorHex: String = ""
 ) {
     // 세부 항목이 있으면 항목 합산, 없으면 directTarget/directCurrent 사용
     val totalCurrent: Double
@@ -28,6 +30,12 @@ data class Goal(
 
     val achievementRate: Double
         get() = if (target > 0) (totalCurrent / target * 100).coerceAtMost(100.0) else 0.0
+    // 색상 int 반환 (없으면 기본 파란색)
+    fun resolveColor(): Int =
+        if (colorHex.isNotEmpty()) {
+            try { android.graphics.Color.parseColor(colorHex) }
+            catch (e: Exception) { 0xFF3B82F6.toInt() }
+        } else 0xFF3B82F6.toInt()
 }
 
 object GoalRepository {
