@@ -28,13 +28,13 @@ data class Goal(
         get() = if (items.isNotEmpty()) items.sumOf { it.currentValue } else 0.0
 
     val achievementRate: Double
-        get() = if (target > 0) (totalCurrent / target * 100).coerceAtMost(100.0) else 0.0
+        get() = if (target > 0) (totalCurrent / target * 100) else 0.0
     // 색상 int 반환 (없으면 기본 파란색)
-    fun resolveColor(): Int =
+    fun resolveColor():Int= 
         if (colorHex.isNotEmpty()) {
             try { android.graphics.Color.parseColor(colorHex) }
             catch (e: Exception) { 0xFF3B82F6.toInt() }
-        } else 0xFF3B82F6.toInt()
+        } else (0xFF3B82F6.toInt() )
 }
 
 object GoalRepository {

@@ -17,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView
 import java.text.NumberFormat
 import kotlin.math.roundToInt
 
+import android.graphics.drawable.GradientDrawable
+import androidx.core.content.ContextCompat
+
 class DetailActivity : AppCompatActivity() {
 
     private var goalId: String = ""
@@ -30,6 +33,7 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var rvItems: RecyclerView
     private lateinit var tvEmpty: TextView
     private lateinit var btnAdd: LinearLayout
+    private lateinit var headerCard: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +51,7 @@ class DetailActivity : AppCompatActivity() {
         rvItems = findViewById(R.id.rv_items)
         tvEmpty = findViewById(R.id.tv_items_empty)
         btnAdd = findViewById(R.id.btn_add_item)
+        headerCard = findViewById(R.id.header_card)
 
         rvItems.layoutManager = LinearLayoutManager(this)
         rvItems.adapter = ItemAdapter()
@@ -84,6 +89,16 @@ class DetailActivity : AppCompatActivity() {
         val unit = if (goal.unit.isNotEmpty()) " ${goal.unit}" else ""
         tvCurrent.text = "달성: ${NumberFormat.getInstance().format(goal.totalCurrent)}$unit"
         tvTarget.text = "목표: ${NumberFormat.getInstance().format(goal.target)}$unit"
+        val headColor = goal.resolveColor()
+        val barColor = (headColor and 0x00FFFFFF) or (128 shl 24)    // alpha 50%로 연하게
+
+        headerCard.setBackgroundColor(headColor)
+        val progressDrawable = ContextCompat.getDrawable(this, R.drawable.progress_bar_fill)?.mutate()
+        if (progressDrawable is GradientDrawable) {
+            progressDrawable.setColor(barColor)
+        }
+        vProgress.background = progressDrawable
+
 
         val progressParent = vProgress.parent as FrameLayout
         progressParent.post {
