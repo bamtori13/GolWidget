@@ -64,7 +64,7 @@ object GoalRepository {
     fun saveGoal(context: android.content.Context, goal: Goal) {
         val goals = loadGoals(context)
         val idx = goals.indexOfFirst { it.id == goal.id }
-        if (idx >= 0) goals[idx] = goal else goals.add(goal)
+        if (idx >= 0) goals[idx] = goal else goals.add(0, goal)
         saveGoals(context, goals)
     }
 
