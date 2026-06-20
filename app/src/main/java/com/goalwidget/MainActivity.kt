@@ -143,6 +143,7 @@ class MainActivity : AppCompatActivity() {
 
         // 색상 팔레트 설정
         ColorPalette.setup(this, palette, selectedColor) { hex -> selectedColor = hex }
+
         if (existing != null) {
             tvDlgTitle.text = "목표 편집"
             btnSave.text = "저장"
@@ -182,11 +183,11 @@ class MainActivity : AppCompatActivity() {
 		            colorHex = selectedColor
                 )
                 saveGoalSynced(goal)
-                dialog.dismiss()
-                refreshGoals()
-                GoalWidgetProvider.updateAllWidgets(this)
             }
-
+           
+            dialog.dismiss()
+            refreshGoals()
+            GoalWidgetProvider.updateAllWidgets(this)
         }
         dialog.show()
     }
