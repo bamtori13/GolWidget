@@ -3,6 +3,7 @@ package com.goalwidget
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.UUID
+import kotlin.math.floor
 
 data class GoalItem(
     val id: String = UUID.randomUUID().toString(),
@@ -28,7 +29,7 @@ data class Goal(
         get() = if (items.isNotEmpty()) items.sumOf { it.currentValue } else 0.0
 
     val achievementRate: Double
-        get() = if (target > 0) (totalCurrent / target * 100) else 0.0
+        get() = if (target > 0) floor(totalCurrent / target * 100) else 0.0
     // 색상 int 반환 (없으면 기본 파란색)
     fun resolveColor():Int= 
         if (colorHex.isNotEmpty()) {
