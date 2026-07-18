@@ -18,6 +18,7 @@ import kotlin.math.roundToInt
 import android.util.Log
 import java.text.NumberFormat
 
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView

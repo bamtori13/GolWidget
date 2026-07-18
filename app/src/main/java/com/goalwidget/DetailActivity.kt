@@ -20,6 +20,9 @@ import kotlin.math.roundToInt
 import android.graphics.drawable.GradientDrawable
 import androidx.core.content.ContextCompat
 
+import android.content.Intent
+
+
 class DetailActivity : AppCompatActivity() {
 
     private var goalId: String = ""
@@ -39,6 +42,7 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_home)
 
         goalId = intent.getStringExtra("goal_id") ?: ""
         if (goalId.isEmpty()) { finish(); return }
@@ -162,11 +166,6 @@ class DetailActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) { finish(); return true }
-        return super.onOptionsItemSelected(item)
-    }
-
     inner class ItemAdapter : RecyclerView.Adapter<ItemAdapter.VH>() {
 
         inner class VH(v: View) : RecyclerView.ViewHolder(v) {
@@ -203,4 +202,25 @@ class DetailActivity : AppCompatActivity() {
             }
         }
     }
+
+    // 좌상단 버튼을 main activity로 이동
+    private fun goToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            goToMainActivity()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    
+    // 뒤로가기
+    // override fun onBackPressed() {
+    //     goToMainActivity()
+    // }
 }
