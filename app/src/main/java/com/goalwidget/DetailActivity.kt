@@ -82,12 +82,14 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun refreshUI() {
+
+        goal.items.sortByDescending { it.name }
         title = goal.name
         tvTitle.text = goal.name
         val rate = goal.achievementRate
         tvRate.text = "${rate.roundToInt()}%"
         val unit = if (goal.unit.isNotEmpty()) " ${goal.unit}" else ""
-        tvCurrent.text = "달성: ${NumberFormat.getInstance().format(goal.totalCurrent)}$unit"
+        tvCurrent.text = "달성: ${NumberFormat.getInstance().format(goal.totalCurrent)}$unit (차이: ${NumberFormat.getInstance().format(goal.target-goal.totalCurrent)}$unit)"
         tvTarget.text = "목표: ${NumberFormat.getInstance().format(goal.target)}$unit"
         val headColor = goal.resolveColor()
         val barColor = (headColor and 0x00FFFFFF) or (128 shl 24)    // alpha 50%로 연하게

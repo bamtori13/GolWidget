@@ -59,9 +59,12 @@ class GoalWidgetProvider : AppWidgetProvider() {
                 views.setTextViewText(R.id.tv_widget_title, goal.name)
                 views.setTextViewText(R.id.tv_widget_rate, "${rate.roundToInt()}%")
                 val valueText = buildString {
+                    append(NumberFormat.getInstance().format(goal.target-goal.totalCurrent))
+                    append(" ( ")
                     append(NumberFormat.getInstance().format(goal.totalCurrent))
                     append(" / ")
                     append(NumberFormat.getInstance().format(goal.target))
+                    append(" ) ")
                     if (goal.unit.isNotEmpty()) append(" ${goal.unit}")
                 }
                 views.setTextViewText(R.id.tv_widget_value, valueText)
@@ -70,7 +73,7 @@ class GoalWidgetProvider : AppWidgetProvider() {
                 goalColor = 0xFF3B82F6.toInt()
                 views.setTextViewText(R.id.tv_widget_title, "목표 없음")
                 views.setTextViewText(R.id.tv_widget_rate, "0%")
-                views.setTextViewText(R.id.tv_widget_value, "탭하여 목표 설정")
+                views.setTextViewText(R.id.tv_widget_rate, "탭하여 목표 설정")
             }
 
             // 달성률 텍스트를 목표 색상으로
