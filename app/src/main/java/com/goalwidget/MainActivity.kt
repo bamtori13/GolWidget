@@ -198,10 +198,14 @@ class MainActivity : AppCompatActivity() {
     // ── 목표 복제 ────────────────────────────────────────
     private fun copyGoal(goal: Goal) {
         
-        val newGoal = goal.copy(id = java.util.UUID.randomUUID().toString())
-        newGoal.items = mutableListOf()
+        val newGoal = goal.copy(id = java.util.UUID.randomUUID().toString(), 
+            items = goal.items.map { item ->
+                item.copy(id = java.util.UUID.randomUUID().toString())
+            }.toMutableList()
+        )
         showCreateGoalDialog(newGoal)
     }
+        
 
     inner class GoalAdapter : RecyclerView.Adapter<GoalAdapter.VH>() {
 

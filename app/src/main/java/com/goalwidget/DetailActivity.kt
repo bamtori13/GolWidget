@@ -92,9 +92,9 @@ class DetailActivity : AppCompatActivity() {
         tvTitle.text = goal.name
         val rate = goal.achievementRate
         tvRate.text = "${rate.roundToInt()}%"
-        val unit = if (goal.unit.isNotEmpty()) " ${goal.unit}" else ""
-        tvCurrent.text = "달성: ${NumberFormat.getInstance().format(goal.totalCurrent)}$unit (차이: ${NumberFormat.getInstance().format(goal.target-goal.totalCurrent)}$unit)"
-        tvTarget.text = "목표: ${NumberFormat.getInstance().format(goal.target)}$unit"
+        //val unit = if (goal.unit.isNotEmpty()) " ${goal.unit}" else ""
+        tvCurrent.text = "달성: ${NumberFormat.getInstance().format(goal.totalCurrent)} (차이: ${NumberFormat.getInstance().format(goal.target-goal.totalCurrent)})"
+        tvTarget.text = "목표: ${NumberFormat.getInstance().format(goal.target)}"
         val headColor = goal.resolveColor()
         val barColor = (headColor and 0x00FFFFFF) or (128 shl 24)    // alpha 50%로 연하게
 
@@ -186,8 +186,8 @@ class DetailActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: VH, position: Int) {
             val item = goal.items[position]
             holder.tvName.text = item.name
-            val unit = if (goal.unit.isNotEmpty()) " / ${goal.unit}" else ""
-            holder.tvValues.text = "${NumberFormat.getInstance().format(item.currentValue)}$unit "
+            //val unit = if (goal.unit.isNotEmpty()) " / ${goal.unit}" else ""
+            holder.tvValues.text = "${NumberFormat.getInstance().format(item.currentValue)} "
 
             holder.btnEdit.setOnClickListener { showItemDialog(item) }
             holder.btnDelete.setOnClickListener {
