@@ -169,6 +169,7 @@ class DetailActivity : AppCompatActivity() {
     inner class ItemAdapter : RecyclerView.Adapter<ItemAdapter.VH>() {
 
         inner class VH(v: View) : RecyclerView.ViewHolder(v) {
+            val itemArea: View = v.findViewById(R.id.item_area)
             val tvName: TextView = v.findViewById(R.id.tv_item_name)
             val tvValues: TextView = v.findViewById(R.id.tv_item_values)
 
@@ -188,6 +189,21 @@ class DetailActivity : AppCompatActivity() {
             holder.tvName.text = item.name
             //val unit = if (goal.unit.isNotEmpty()) " / ${goal.unit}" else ""
             holder.tvValues.text = "${NumberFormat.getInstance().format(item.currentValue)} "
+
+            holder.itemArea.setBackgroundColor(ContextCompat.getColor(
+                this@DetailActivity,
+                if (item.isIncludedInAchievement) R.color.surface else R.color.item_not_applied
+            ))
+            holder.itemArea.contentDescription = if (item.isIncludedInAchievement) {
+                "${item.name}, 목표달성결과에 적용됨. 누르면 미적용으로 변경됩니다."
+            } else {
+                "${item.name}, 목표달성결과에 미적용됨. 누르면 적용으로 변경됩니다."
+            }
+            holder.itemArea.setOnClickListener {
+                item.isIncludedInAchievement = !item.isIncludedInAchievement
+                saveGoalSynced()
+                refreshUI()
+            }
 
             holder.btnEdit.setOnClickListener { showItemDialog(item) }
             holder.btnDelete.setOnClickListener {

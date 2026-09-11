@@ -9,6 +9,7 @@ data class GoalItem(
     val id: String = UUID.randomUUID().toString(),
     var name: String = "",
     var currentValue: Double = 0.0,
+    var isIncludedInAchievement: Boolean = true,
 ) {
 
 }
@@ -26,7 +27,9 @@ data class Goal(
 ) {
     // 세부 항목이 있으면 항목 합산
     val totalCurrent: Double
-        get() = if (items.isNotEmpty()) items.sumOf { it.currentValue } else 0.0
+        get() = if (items.isNotEmpty()) {
+            items.filter { it.isIncludedInAchievement }.sumOf { it.currentValue }
+        } else 0.0
 
     val achievementRate: Double
         get() = if (target > 0) floor(totalCurrent / target * 100) else 0.0

@@ -217,7 +217,8 @@ object SyncManager {
                 itemsRef.child(item.id).setValue(mapOf(
                     "id" to item.id,
                     "name" to item.name,
-                    "currentValue" to item.currentValue
+                    "currentValue" to item.currentValue,
+                    "isIncludedInAchievement" to item.isIncludedInAchievement
                 ))
             }
         }
@@ -270,7 +271,15 @@ object SyncManager {
                 val itemId = itemSnap.child("id").getValue(String::class.java) ?: continue
                 val itemName = itemSnap.child("name").getValue(String::class.java) ?: ""
                 val cur = itemSnap.child("currentValue").getValue(Double::class.java) ?: 0.0
-                items.add(GoalItem(id = itemId, name = itemName, currentValue = cur))
+                // Existing shared goals do not have this field, so keep their previous behavior.
+                val isIncluded = itemSnap.child("isIncludedInAchievement")
+                    .getValue(Boolean::class.java) ?: true
+                items.add(GoalItem(
+                    id = itemId,
+                    name = itemName,
+                    currentValue = cur,
+                    isIncludedInAchievement = isIncluded
+                ))
             }
 
             Goal(id = id, name = name, unit = unit,
